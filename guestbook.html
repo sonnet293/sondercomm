@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/guestbook.css">
+    <title>방명록</title>
+    <style>
+    .marquee-wrap {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: #fff;
+      padding: 10px 0;
+    }
+ 
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee-scroll 20s linear infinite;
+    }
+
+    .marquee-wrap:hover .marquee-track {
+      animation-play-state: paused;
+    }
+ 
+    .marquee-text {
+      white-space: nowrap;
+      font-size: 1.1rem;
+      color: #333;
+      padding-right: 80px; 
+      font-family: sans-serif;
+    }
+ 
+    @keyframes marquee-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+ 
+    .marquee-edit-btn {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      background: rgba(255 255 255 / 0.15);
+      border: 1px solid rgba(255 255 255 / 0.3);
+      border-radius: 6px;
+      color: #666;
+      font-size: 0.85rem;
+      padding: 3px 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.2s;
+    }
+    .marquee-edit-btn:hover {
+      background: rgba(255 255 255 / 0.28);
+    }
+
+    .marquee-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0 0 0 / 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+ 
+    .marquee-modal {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 24px 20px;
+      width: min(480px, 90vw);
+      box-shadow: 0 8px 32px rgba(0 0 0 / 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+ 
+    .marquee-modal-title {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+ 
+    .marquee-modal-page {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #666;
+    }
+ 
+    .marquee-modal-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .marquee-modal-textarea:focus {
+      border-color: #555;
+    }
+ 
+    .marquee-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+ 
+    .marquee-btn-cancel,
+    .marquee-btn-save {
+      padding: 7px 18px;
+      border-radius: 7px;
+      border: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .marquee-btn-cancel {
+      background: #eee;
+      color: #333;
+    }
+    .marquee-btn-save {
+      background: #222;
+      color: #fff;
+    }
+    .marquee-btn-save:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .marquee-btn-cancel:hover { opacity: 0.8; }
+    .marquee-btn-save:hover:not(:disabled) { opacity: 0.85; }
+ 
+    .marquee-modal-msg {
+      margin: 0;
+      font-size: 0.82rem;
+      color: #555;
+      min-height: 1.2em;
+    }
+    </style>
+</head>
+<body>
+
+     <!--깃발 / 로고-->
+    <div class="top-area">
+        <a href="index.html" class="main-flag">
+            <img src="img/Flag.png" alt="메인 깃발" />
+        </a>
+        <a href="index.html" class="main-btn">메인</a>
+        <div class="site-logo">
+            <img src="img/Guest Book Logo.png" alt="방명록 로고" />
+        </div>
+    </div>
+
+    <header class="site-header">
+        <div id="marquee-board" data-page-id="guestbook">방명록 전광판</div>
+        <nav>
+            <div class="nav-btn">
+                <a href="guestbook.html">방명록</a>
+            </div>
+            <div class="nav-btn">
+                <a href="character.html">캐릭터</a>
+            </div>
+            <div class="nav-btn">
+                <a href="backup.html">백업</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-wrap">
+        <!--메시지 입력-->
+        <div class="gb-input-area">
+            <input type="text" id="name-input" class="gb-input gb-input--name" placeholder="name" maxlength="20" />
+            <textarea id="message-input" class="gb-input gb-input--message" placeholder="message" maxlength="300"></textarea>
+
+            <div class="send-button">
+                <button id="send-btn" class="btn btn-send">
+                    <span class="btn__label">SEND</span>
+                </button>
+            </div>
+        </div>
+
+        <!--방명록 영역-->
+        <div id="chat-container" class="gb-chat">
+            <div id="messages-list" class="gb-chat__inner"></div>
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <p>아직 방명록이 없습니다.</p>
+            </div>
+        </div>
+    </main>
+
+    <!--답장 모달-->
+    <div id="reply-modal" class="modal" style="display: none;">
+        <div class="modal__box">
+            <div class="modal__header">
+                <span class="modal__title">답장</span>
+                <button id="modal-close" class="modal__close">✕</button>
+            </div>
+            <div id="modal-quote" class="modal__quote"></div>
+            <textarea id="reply-input" class="modal__textarea" placeholder="답장하기" maxlength="300" rows="3"></textarea>
+            <div class="modal__footer">
+                <button id="modal-cancel" class="btn btn--ghost btn--sm">취소</button>
+                <button id="modal-send" class="btn btn--primary btn--sm">답장</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script type="module" src="js/board.js"></script>
+    <script type="module" src="js/guestbook.js"></script>
+    
+</body>
+</html>

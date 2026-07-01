@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/backup.css">
+    <title>백업</title>
+    <style>
+        .marquee-wrap {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: #fff;
+      padding: 10px 0;
+    }
+ 
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee-scroll 20s linear infinite;
+    }
+
+    .marquee-wrap:hover .marquee-track {
+      animation-play-state: paused;
+    }
+ 
+    .marquee-text {
+      white-space: nowrap;
+      font-size: 1.1rem;
+      color: #333;
+      padding-right: 80px; 
+      font-family: sans-serif;
+    }
+ 
+    @keyframes marquee-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+ 
+    .marquee-edit-btn {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      background: rgba(255 255 255 / 0.15);
+      border: 1px solid rgba(255 255 255 / 0.3);
+      border-radius: 6px;
+      color: #666;
+      font-size: 0.85rem;
+      padding: 3px 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.2s;
+    }
+    .marquee-edit-btn:hover {
+      background: rgba(255 255 255 / 0.28);
+    }
+
+    .marquee-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0 0 0 / 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+ 
+    .marquee-modal {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 24px 20px;
+      width: min(480px, 90vw);
+      box-shadow: 0 8px 32px rgba(0 0 0 / 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+ 
+    .marquee-modal-title {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+ 
+    .marquee-modal-page {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #666;
+    }
+ 
+    .marquee-modal-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .marquee-modal-textarea:focus {
+      border-color: #555;
+    }
+ 
+    .marquee-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+ 
+    .marquee-btn-cancel,
+    .marquee-btn-save {
+      padding: 7px 18px;
+      border-radius: 7px;
+      border: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .marquee-btn-cancel {
+      background: #eee;
+      color: #333;
+    }
+    .marquee-btn-save {
+      background: #222;
+      color: #fff;
+    }
+    .marquee-btn-save:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .marquee-btn-cancel:hover { opacity: 0.8; }
+    .marquee-btn-save:hover:not(:disabled) { opacity: 0.85; }
+ 
+    .marquee-modal-msg {
+      margin: 0;
+      font-size: 0.82rem;
+      color: #555;
+      min-height: 1.2em;
+    }
+    </style>
+</head>
+<body>
+    
+    <!--깃발 / 로고-->
+    <div class="top-area">
+        <a href="index.html" class="main-flag">
+            <img src="img/Flag.png" alt="메인 깃발" />
+        </a>
+        <a href="index.html" class="main-btn">메인</a>
+        <div class="site-logo">
+            <img src="img/Archive Logo.png" alt="백업 로고" />
+        </div>
+    </div>
+
+    <header class="site-header">
+        <div id="marquee-board" data-page-id="backup">백업 전광판</div>
+        <nav>
+            <div class="nav-btn">
+                <a href="guestbook.html">방명록</a>
+            </div>
+            <div class="nav-btn">
+                <a href="character.html">캐릭터</a>
+            </div>
+            <div class="nav-btn">
+                <a href="backup.html">백업</a>
+            </div>
+        </nav>
+    </header>
+
+    <!--메인 영역-->
+    <main class="main-wrap">
+
+        <!--로딩 스켈레톤-->
+        <div id="skeleton-list">
+            <div class="skeleton-card">
+                <div class="skeleton-thumb"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line skeleton-title"></div>
+                    <div class="skeleton-line skeleton-date"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-thumb"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line skeleton-title"></div>
+                    <div class="skeleton-line skeleton-date"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-thumb"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line skeleton-title"></div>
+                    <div class="skeleton-line skeleton-date"></div>
+                </div>
+            </div>
+        </div>
+
+        <!--게시글 목록-->
+        <div id="post-list" style="display: none;"></div>
+
+        <!--페이지네이션-->
+        <div id="pagination" class="pagination"></div>
+
+        <!--빈 상태-->
+        <div id="empty-state" style="display: none;">
+            <div class="empty-icon">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                    <rect x="6" y="8" width="36" height="32" rx="5" stroke="currentColor" stroke-width="2"/>
+                    <path d="M14 18h20M14 24h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <p>아직 작성된 글이 없습니다.</p>
+        </div>
+
+    </main>
+
+    <!--비밀번호 입력 모달-->
+    <div id="secret-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <rect x="4" y="8" width="10" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M6 8V6a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <h3>비밀글</h3>
+                </div>
+                <button id="secret-modal-close" class="modal-close-btn">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">비밀번호 입력</p>
+                <input type="password" id="secret-pw-input" class="modal-pw-input" placeholder="비밀번호 입력" maxlength="30" />
+                <p id="modal-pw-error" class="modal-pw-error"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="secret-modal-confirm" class="btn btn-primary">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!--글 상세 모달-->
+    <div id="post-modal" class="modal-overlay">
+        <div class="post-modal-box">
+            <div class="post-modal-header">
+                <button id="post-modal-close" class="post-modal-back">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <path d="M11 4L6 9l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    목록으로
+                </button>
+                <div id="post-modal-meta" class="post-modal-meta"></div>
+            </div>
+            <div class="post-modal-content">
+                <h1 id="post-modal-title" class="post-modal-title"></h1>
+                <div id="post-modal-body" class="post-modal-body ql-editor"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <!--글쓰기 버튼-->
+    <a href="write.html" id="write-fab" class="write-fab" style="display:none;" title="글쓰기">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M13.5 3.5a2.121 2.121 0 013 3L6 17H3v-3L13.5 3.5z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+
+    <script type="module" src="js/board.js"></script>
+    <script type="module" src="js/backup.js"></script>
+
+</body>
+</html>

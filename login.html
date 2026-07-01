@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/login.css">
+    <title>회원가입 | 로그인</title>
+</head>
+<body>
+
+    <div class="container">
+        <div class="tab-row">
+            <button id="login-tab" class="tab-btn active">로그인</button>
+            <button id="signup-tab" class="tab-btn">회원가입</button>
+        </div>
+
+        <!--로그인 폼-->
+        <div id="login-form">
+            <div class="form-group">
+                <input type="email" id="login-email" class="form-input" placeholder="이메일" />
+                <input type="password" id="login-password" class="form-input" placeholder="비밀번호" />
+            </div>
+            <button id="loginBtn" class="submit-btn">로그인</button>
+            <p id="login-result" class="result-msg"></p>
+        </div>
+
+        <!--회원가입 폼-->
+        <div id="signup-form" style="display: none;">
+            <div class="form-group">
+                <input type="email" id="signup-email" class="form-input" placeholder="이메일" />
+                <input type="password" id="signup-password" class="form-input" placeholder="비밀번호" />
+            </div>
+            <button id="signupBtn" class="submit-btn">회원가입</button>
+            <p id="signup-result" class="result-msg"></p>
+        </div>
+    </div>
+
+    <script type="module" src="js/login.js"></script>
+    
+</body>
+</html>
