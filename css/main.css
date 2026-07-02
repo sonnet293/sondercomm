@@ -212,7 +212,7 @@ body {
     width: 50%;
     background-color: rgba(30,30,30,0.82);
     top: 26%;
-    left: 33%;
+    left: 10%;
     border-radius: var(--radius-lg);
     padding: 12px 14px;
     backdrop-filter: blur(6px);
@@ -278,6 +278,21 @@ body {
     color: var(--text-light);
     text-align: center;
     padding: 8px 0;
+}
+
+.special-menu {
+    position: absolute;
+    width: 200px;
+    left: 32%;
+    bottom: 48%;
+    opacity: 0;
+    animation: fadeSlideUp 0.7s ease forwards 1.35s;
+}
+
+.special-menu img {
+    display: block;
+    width: 100%;
+    height: auto;
 }
 
 .nav {
