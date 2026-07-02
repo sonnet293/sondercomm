@@ -17,4 +17,4 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 
 // 갠홈 주인 UID 입력하시면 됩니다!
-export const OWNER_UID = "OI2PY5O6LLRTCtQB05HXDyc9z8W2";
+export const OWNER_UID = "GU5B0j0cVdbXp5Ug1xp3oSN6j7a2";
