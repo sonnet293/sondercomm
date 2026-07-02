@@ -75,6 +75,9 @@ body {
 .top-area {
     position: relative;
     height: 120px;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
 }
 
 .main-flag {
@@ -390,7 +393,7 @@ nav {
     padding: 60px 0;
     color: var(--text-light);
     font-size: 14px;
-    font-family: var(--font-sans);
+    font-family: var(--font-custom);
 }
 
 /* 모달 */
