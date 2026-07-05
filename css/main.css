@@ -333,13 +333,13 @@ body {
 }
 
 .nav-owner-m {
-    top: 55%;
+    top: 43%;
     left: 37%;
     animation: fadeSlideUp 0.7s ease forwards 1.4s;
 }
 
 .nav-chara-m {
-    top: 55%;
+    top: 43%;
     left: 70%;
     animation: fadeSlideUp 0.7s ease forwards 1.5s;
 }
