@@ -193,6 +193,7 @@ body {
 .menu-area {
     position: relative;
     display: inline-block;
+    align-self: flex-start;
     margin-top: 20px;
     opacity: 0;
     animation: fadeSlideLeft 0.9s ease forwards 0.9s;
@@ -349,6 +350,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    padding-bottom: 14%;
     height: 100%;
 }
 
